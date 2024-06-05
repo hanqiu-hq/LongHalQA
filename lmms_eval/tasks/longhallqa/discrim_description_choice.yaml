@@ -1,0 +1,20 @@
+dataset_path: QHQK/description_hall_choice_v2
+dataset_kwargs:
+  token: True
+task: "lhqa_discrim_description_choice"
+test_split: test
+output_type: generate_until
+doc_to_visual: !function utils.lhqa_doc_to_visual
+doc_to_text: !function utils.lhqa_doc_to_text_choice
+doc_to_target: "answer"
+generation_kwargs:
+  until:
+    - "ASSISTANT:"
+  image_aspect_ratio: original
+process_results: !function utils.lhqa_process_result_choice
+metric_list:
+  - metric: lhqa_acc
+    aggregation: !function utils.lhqa_aggregate_choice_acc
+    higher_is_better: true
+metadata:
+  - version: 0.0
