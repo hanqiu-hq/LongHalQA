@@ -1,4 +1,4 @@
-dataset_path: QHQK/description_hall_binary_v1
+dataset_path: QHQK/description_hall_binary_v3
 dataset_kwargs:
   token: True
 task: "lhqa_discrim_description_binary"

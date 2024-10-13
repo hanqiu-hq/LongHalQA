@@ -21,15 +21,6 @@ def lhqa_doc_to_text_choice(doc):
     return f"{question}\nAnswer with the option's letter from the given choices directly."
 
 
-def lhqa_doc_to_text_ppl(doc):
-    question = doc["question"]
-    return f"{question} \n Answer: "
-
-
-def lhqa_doc_to_text_completion(doc):
-    return doc["question"]
-
-
 def lhqa_process_results(doc, results):
     ori_pred = results[0].lower().strip()
     if ori_pred.startswith("yes"):

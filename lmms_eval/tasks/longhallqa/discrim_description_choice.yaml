@@ -1,4 +1,4 @@
-dataset_path: QHQK/description_hall_choice_v2
+dataset_path: QHQK/description_hall_choice_v3
 dataset_kwargs:
   token: True
 task: "lhqa_discrim_description_choice"

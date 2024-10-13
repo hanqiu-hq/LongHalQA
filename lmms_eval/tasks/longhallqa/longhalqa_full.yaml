@@ -1,0 +1,9 @@
+group : longhalqa
+task:
+  - lhqa_discrim_object_binary
+  - lhqa_discrim_description_binary
+  - lhqa_discrim_conversation_binary
+  - lhqa_discrim_description_choice
+  - lhqa_discrim_conversation_choice
+  - lhqa_complete_description
+  - lhqa_complete_conversation

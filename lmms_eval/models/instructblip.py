@@ -1,25 +1,24 @@
-import torch
-import logging
 import copy
+import warnings
+from typing import List, Optional, Tuple, Union
+
+import torch
+import transformers
+from accelerate import Accelerator, DistributedType
+from accelerate.state import AcceleratorState
 from tqdm import tqdm
+from transformers import InstructBlipForConditionalGeneration, InstructBlipProcessor
+
 from lmms_eval import utils
 from lmms_eval.api.instance import Instance
 from lmms_eval.api.model import lmms
 from lmms_eval.api.registry import register_model
-# from lmms_eval.tasks.mmmu.utils_group_img import process_images
-from accelerate import Accelerator, DistributedType
-from accelerate.state import AcceleratorState
-from typing import List, Optional, Union, Tuple
-from transformers import InstructBlipProcessor, InstructBlipForConditionalGeneration
-
+from lmms_eval.tasks.mmmu.utils_group_img import process_images
 from lmms_eval.utils import stop_sequences_criteria
-
-
-import warnings
 
 warnings.filterwarnings("ignore")
 
-eval_logger = logging.getLogger("lmms-eval")
+from loguru import logger as eval_logger
 
 
 @register_model("instructblip")
@@ -235,3 +234,6 @@ class InstructBLIP(lmms):
 
         pbar.close()
         return res
+
+    def generate_until_multi_round(self, requests) -> List[str]:
+        raise NotImplementedError("TODO: Implement multi-round generation for InstructBlip")

@@ -1,11 +1,16 @@
-from multiprocessing import context
-import torch
-from transformers import AutoModel, AutoTokenizer
-from PIL import Image
-import numpy as np
-import torchvision.transforms as transforms
+import re
 from datetime import timedelta
-import logging
+from multiprocessing import context
+from typing import List, Optional, Sequence, Tuple, Union
+
+import numpy as np
+import torch
+import torchvision.transforms as transforms
+from accelerate import Accelerator, DistributedType, InitProcessGroupKwargs
+from accelerate.state import AcceleratorState
+from PIL import Image
+from tqdm import tqdm
+from transformers import AutoModel, AutoTokenizer
 
 from lmms_eval import utils
 from lmms_eval.api.instance import Instance
@@ -13,16 +18,9 @@ from lmms_eval.api.model import lmms
 from lmms_eval.api.registry import register_model
 from lmms_eval.utils import stop_sequences_criteria
 
-from accelerate import Accelerator, DistributedType, InitProcessGroupKwargs
-from accelerate.state import AcceleratorState
-
-from typing import Optional, Sequence, List, Tuple, Union
-import re
-from tqdm import tqdm
-
 pattern = re.compile(r"[A-Z]")
 
-eval_logger = logging.getLogger("lmms-eval")
+from loguru import logger as eval_logger
 
 meta_instruction = """You are an AI assistant whose name is InternLM-XComposer (浦语·灵笔).
 - InternLM-XComposer (浦语·灵笔) is a multi-modality conversational language model that is developed\
@@ -146,7 +144,7 @@ class XComposer2_4KHD(lmms):
         for contexts, gen_kwargs, doc_to_visual, doc_id, task, split in [reg.args for reg in requests]:
             # encode, pad, and truncate contexts for this batch
             if "[UNUSED_TOKEN_146]" not in contexts:
-                contexts = f"[UNUSED_TOKEN_146]user\n{contexts}[UNUSED_TOKEN_145]\n[UNUSED_TOKEN_146]assistant\n" 
+                contexts = f"[UNUSED_TOKEN_146]user\n{contexts}[UNUSED_TOKEN_145]\n[UNUSED_TOKEN_146]assistant\n"
             visuals = [doc_to_visual(self.task_dict[task][split][doc_id])]
             visuals = self.flatten(visuals)
 
@@ -230,6 +228,9 @@ class XComposer2_4KHD(lmms):
 
     def loglikelihood(self, requests: List[Instance]) -> List[Tuple[float, bool]]:
         return super().loglikelihood(requests)
+
+    def generate_until_multi_round(self, requests) -> List[str]:
+        raise NotImplementedError("TODO: Implement multi-round generation")
 
 
 def padding_336(b):

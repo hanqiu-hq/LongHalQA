@@ -1,4 +1,4 @@
-dataset_path: QHQK/conversation_hall_completion_v2
+dataset_path: QHQK/conversation_hall_completion_v3
 dataset_kwargs:
   token: True
 task: "lhqa_complete_conversation"
